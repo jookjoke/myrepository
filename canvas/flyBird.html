@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+		#cans{
+			border:1px solid red;
+		}
+	</style>
+</head>
+<body>
+	<canvas id="cans" width="800" height="600"></canvas>
+	<script type="text/javascript" src="./js/vendor/seajs-3.0.0/dist/sea.js"></script>
+	<!-- <script type="text/javascript" src="./js/base.js"></script>
+	<script type="text/javascript" src="./js/birds.js"></script> -->
+	<script type="text/javascript">
+		/*seajs.config({
+		  base: "./js/",
+		  alias: {
+		    "jquery": "jquery/jquery/1.10.1/jquery.js"
+		  }
+		})*/
+
+		// 加载入口模块
+		seajs.use("./js/main")
+
+	</script>
+</body>
+</html>
