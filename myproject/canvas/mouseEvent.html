@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+		canvas{
+			border:1px solid red;
+		}
+	</style>
+</head>
+<body>
+	<canvas id="canvas" width="500" height="500" ></canvas>
+	<script type="text/javascript">
+		var canvas = document.getElementById("canvas");
+		var ctx = canvas.getContext("2d");
+
+		function angleToRad(angle){
+			return Math.PI/180 * angle;
+		}
+		function loadImages(imagesObj,fn){
+			var resultObj = {};
+			var loadImgCount = 0;
+			var total = 0;
+			for(var k in imagesObj){
+				total ++;
+				var img = new Image();
+				img.addEventListener("load",function(){
+					loadImgCount++;
+					if(loadImgCount >= total){
+						fn(resultObj);
+					}
+				});
+				img.src = imagesObj[k];
+				resultObj[k] = img;
+			}
+		}
+		var obj = {
+			"birds":"./images/birds.png",
+			"land":"./images/land.png",
+			"pipeDown":"./images/pipeDown.png",
+			"pipeUp":"./images/pipeUp.png",
+			"sky":"./images/sky.png"
+		}
+		function extend(obj1,obj2){
+			for(var k in obj2){
+				obj1[k] = obj2[k];
+			}
+		}
+		function Bird(x,y,width,height){
+			this.x = x;
+			this.y = y;
+			this.width = width;
+			this.height = height;
+			this.index = 0;
+			this.speed = 2;
+			this.speedPlus = 0.3;
+		}
+
+
+		loadImages(obj,function(imgObj){
+
+			Bird.img = imgObj["birds"];
+			Bird.IMG_WIDTH = Bird.img.width / 3;
+			Bird.IMG_HEIGHT = Bird.img.height;
+			extend(Bird.prototype,{
+				draw:function(ctx){
+					ctx.save();
+					var coreX = this.x + this.width / 2;
+					var coreY = this.y + this.height / 2;
+					ctx.translate(coreX,coreY);
+					var rad = this.speed * 10;
+						rad = rad >= 45? 45:rad;
+					ctx.rotate(angleToRad(rad));
+					
+					ctx.drawImage(Bird.img,(Bird.IMG_WIDTH * this.index),0,Bird.IMG_WIDTH,Bird.IMG_HEIGHT,
+						(-this.width / 2),(-this.height / 2),this.width,this.height);
+					ctx.restore();
+				},
+				update:function(){
+					this.index = ++this.index % 3;
+					this.y += this.speed;
+					this.speed+=this.speedPlus;
+				}
+			})
+
+			var bird1 = new Bird(50,20,52,48);
+			setInterval(function(){
+				ctx.clearRect(0,0,canvas.width,canvas.height);
+				bird1.draw(ctx);
+				bird1.update();
+			},1000/30);
+			canvas.addEventListener("click",function(){
+				bird1.speed = -3.5;
+			})
+		});
+
+	</script>
+</body>
+</html>
